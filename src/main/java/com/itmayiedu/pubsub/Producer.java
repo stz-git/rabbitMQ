@@ -11,15 +11,14 @@ public class Producer {
     public static void main(String[] args) throws Exception {
         Connection connection =
                 ConnectionUtils.getConnection();
-        if (connection != null) {
+        if (connection != null)
             System.out.println("Producer start");
-        }
 
         Channel channel = connection.createChannel();
 
         //producer bind exchange
         //param1:exchange name
-        //param2:exchange type
+        //param2:exchange type : fanout,direct,topic
         channel.exchangeDeclare(EXCHANGE_NAME, "direct");
 
         for (int i = 0; i < 50; i++) {
@@ -27,6 +26,10 @@ public class Producer {
             System.out.println("Producer send errorMsg:" + errorMsg);
 
             //send msg to exchange
+            //param1: exchange's name
+            //param2: routing key
+            //
+            //param4: msg
             channel.basicPublish(EXCHANGE_NAME, "email", null, errorMsg.getBytes());
         }
 

@@ -1,4 +1,4 @@
-package com.itmayiedu.pubsub;
+package com.itmayiedu.topic;
 
 import com.itmayiedu.util.ConnectionUtils;
 import com.rabbitmq.client.*;
@@ -6,8 +6,8 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 
 public class MessageConsumer {
-    private static final String QUEUE_NAME = "tianyu_msg_queue";
-    private static final String EXCHANGE_NAME = "tianyu_direct_exchange";
+    private static final String QUEUE_NAME = "tianyu_topic_message_queue";
+    private static final String EXCHANGE_NAME = "tianyu_topic_exchange";
 
     public static void main(String[] args) throws Exception {
         Connection connection =
@@ -15,14 +15,11 @@ public class MessageConsumer {
         if (connection != null)
             System.out.println("MessageConsumer start");
 
-        Channel channel = connection.createChannel();
+        final Channel channel = connection.createChannel();
 
-        //consumer declare queue
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
-        //consumer's queue bind exchange
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "email");
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "msg");
+        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "*.message");
 
         DefaultConsumer defaultConsumer = new DefaultConsumer(channel) {
             @Override

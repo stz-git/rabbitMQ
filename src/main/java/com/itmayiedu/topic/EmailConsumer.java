@@ -1,28 +1,26 @@
-package com.itmayiedu.pubsub;
+package com.itmayiedu.topic;
 
 import com.itmayiedu.util.ConnectionUtils;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
 
-public class MessageConsumer {
-    private static final String QUEUE_NAME = "tianyu_msg_queue";
-    private static final String EXCHANGE_NAME = "tianyu_direct_exchange";
+public class EmailConsumer {
+    private static final String QUEUE_NAME = "tianyu_topic_email_queue";
+    private static final String EXCHANGE_NAME = "tianyu_topic_exchange";
 
     public static void main(String[] args) throws Exception {
         Connection connection =
                 ConnectionUtils.getConnection();
         if (connection != null)
-            System.out.println("MessageConsumer start");
+            System.out.println("EmailConsumer start");
 
-        Channel channel = connection.createChannel();
+        final Channel channel = connection.createChannel();
 
-        //consumer declare queue
+        //define consumer-queue
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-
-        //consumer's queue bind exchange
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "email");
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "msg");
+        //define queue-exchange
+        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "#.email");
 
         DefaultConsumer defaultConsumer = new DefaultConsumer(channel) {
             @Override
@@ -30,7 +28,7 @@ public class MessageConsumer {
                     (String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
                 String msg = new String(body, "UTF-8");
-                System.out.println("MessageConsumer receive :" + msg);
+                System.out.println("EmailConsumer receive :" + msg);
             }
         };
 

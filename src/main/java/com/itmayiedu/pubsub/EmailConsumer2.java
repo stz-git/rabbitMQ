@@ -13,9 +13,8 @@ public class EmailConsumer2 {
     public static void main(String[] args) throws Exception {
         Connection connection =
                 ConnectionUtils.getConnection();
-        if (connection != null) {
+        if (connection != null)
             System.out.println("EmailConsumer2 start");
-        }
 
         final Channel channel = connection.createChannel();
 

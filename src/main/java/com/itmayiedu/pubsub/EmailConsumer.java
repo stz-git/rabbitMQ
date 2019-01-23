@@ -20,7 +20,9 @@ public class EmailConsumer {
         final Channel channel = connection.createChannel();
 
         //consumer declare queue
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        //param1
+        //param2 message save disk
+        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
         //consumer's queue bind exchange, message saves in queue.
         channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "email");
@@ -39,6 +41,7 @@ public class EmailConsumer {
                 } catch (Exception e) {
 
                 } finally {
+                    //param2: requeue; true-->message back queue;  false--->delete the message from the queue
                     channel.basicAck(envelope.getDeliveryTag(),false);
                 }
 
