@@ -5,21 +5,21 @@ import com.rabbitmq.client.*;
 
 import java.io.IOException;
 
-public class MessageConsumer {
-    private static final String QUEUE_NAME = "tianyu_topic_message_queue";
+public class WeChatConsumer {
+
+    private static final String QUEUE_NAME = "tianyu_topic_wechat_queue";
     private static final String EXCHANGE_NAME = "tianyu_topic_exchange";
 
     public static void main(String[] args) throws Exception {
-        Connection connection =
-                ConnectionUtils.getConnection();
+        Connection connection = ConnectionUtils.getConnection();
         if (connection != null)
-            System.out.println("MessageConsumer start");
+            System.out.println("WeChatConsumer start");
 
-        final Channel channel = connection.createChannel();
+        Channel channel = connection.createChannel();
 
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "#.message");
+        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "#.wechat");
 
         DefaultConsumer defaultConsumer = new DefaultConsumer(channel) {
             @Override
@@ -27,7 +27,7 @@ public class MessageConsumer {
                     (String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
                 String msg = new String(body, "UTF-8");
-                System.out.println("MessageConsumer receive :" + msg);
+                System.out.println("WeChatConsumer receive :" + msg);
             }
         };
 

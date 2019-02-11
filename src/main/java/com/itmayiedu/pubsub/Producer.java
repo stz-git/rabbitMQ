@@ -18,7 +18,7 @@ public class Producer {
 
         //producer bind exchange
         //param1:exchange name
-        //param2:exchange type : fanout,direct,topic
+        //param2:exchange type : fanout,direct,topic,header
         channel.exchangeDeclare(EXCHANGE_NAME, "direct");
 
         for (int i = 0; i < 50; i++) {
