@@ -9,11 +9,11 @@ public class Customer1 {
 
     private static final String QUEUE_NAME = "test_queue";
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         //1.get connection
         Connection connection = ConnectionUtils.getConnection();
-        if(null != connection){
+        if (null != connection) {
             System.out.println("customer start");
         }
 
@@ -31,16 +31,16 @@ public class Customer1 {
             @Override
             public void handleDelivery
                     (String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-            throws IOException{
-                String msg = new String(body,"UTF-8");
+                    throws IOException {
+                String msg = new String(body, "UTF-8");
                 System.out.println("customer1 start handle");
-                System.out.println("customer1 get :"+msg);
+                System.out.println("customer1 get :" + msg);
                 try {
                     Thread.sleep(3000);
                     System.out.println("customer1 complete!");
-                }catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     // answer queue to send another message
                     channel.basicAck(envelope.getDeliveryTag(), false);
                 }
@@ -51,6 +51,6 @@ public class Customer1 {
         /**
          * @Param2 start autoACK ?
          */
-        channel.basicConsume(QUEUE_NAME,false,defaultConsumer);
+        channel.basicConsume(QUEUE_NAME, false, defaultConsumer);
     }
 }

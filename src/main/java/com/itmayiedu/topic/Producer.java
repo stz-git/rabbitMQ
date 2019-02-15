@@ -25,8 +25,21 @@ public class Producer {
         channel.basicPublish(EXCHANGE_NAME, "1.1.message", null, msg2.getBytes());
 
         String msg3 = "hello! wechat";
-        channel.basicPublish(EXCHANGE_NAME, "1.wechat", null, msg3.getBytes());
 
+        //like database's transaction
+        try {
+            channel.txSelect();
+
+            channel.basicPublish(EXCHANGE_NAME, "1.wechat", null, msg3.getBytes());
+
+            // error should rollback
+            int i = 10 / 0;
+
+            channel.txCommit();
+        }catch (Exception e){
+            System.out.println("error rollback");
+            channel.txRollback();
+        }
         channel.close();
         connection.close();
     }
